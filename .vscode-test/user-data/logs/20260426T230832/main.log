@@ -1,3 +1,0 @@
-2026-04-26 23:08:33.358 [error] Error: Code is currently being updated. Please wait for the update to complete before launching.
-    at file:///C:/Users/Renni/Desktop/markflow-pro/.vscode-test/vscode-win32-x64-archive-1.117.0/10c8e557c8/resources/app/out/main.js:547:48736
-    at async gb.startup (file:///C:/Users/Renni/Desktop/markflow-pro/.vscode-test/vscode-win32-x64-archive-1.117.0/10c8e557c8/resources/app/out/main.js:547:48140)
