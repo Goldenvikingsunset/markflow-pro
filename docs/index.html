@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarkFlow Pro — Markdown Preview That Actually Works</title>
+  <meta name="description" content="Smart Markdown preview for VS Code that follows your active file automatically. Free + Pro. Replace the abandoned Auto-Open Markdown Preview extension.">
+  <meta name="keywords" content="vscode markdown preview, auto open markdown preview, vs code markdown extension, markdown preview not working">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:  #4ec9b0;
+      --blue:   #569cd6;
+      --purple: #c586c0;
+      --bg:     #1e1e1e;
+      --surface: #252526;
+      --border: #3c3c3c;
+      --text:   #cccccc;
+      --muted:  #858585;
+      --white:  #f0f0f0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-brand span { color: var(--green); }
+    nav a.install-btn {
+      background: var(--green);
+      color: #1e1e1e;
+      padding: 8px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.15s;
+    }
+    nav a.install-btn:hover { opacity: 0.85; }
+
+    /* ---- HERO ---- */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(78, 201, 176, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(78, 201, 176, 0.3);
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: var(--green); }
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: #1e1e1e;
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: border-color 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); }
+
+    .install-count {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ---- PROBLEM SECTION ---- */
+    .section { padding: 64px 24px; max-width: 900px; margin: 0 auto; }
+    .section-label {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .section h2 {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .section > p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .pain-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .pain-card .icon { font-size: 22px; margin-bottom: 10px; }
+    .pain-card h3 { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+    .pain-card p { font-size: 13px; color: var(--muted); }
+    .pain-card.fixed { border-color: rgba(78, 201, 176, 0.25); }
+    .pain-card.fixed h3::after {
+      content: ' ✓';
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    /* ---- FEATURE TABLE ---- */
+    .features-section { padding: 64px 24px; background: var(--surface); }
+    .features-inner { max-width: 800px; margin: 0 auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 32px;
+    }
+    th {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+    th:not(:first-child) { text-align: center; }
+    td {
+      padding: 13px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid #2a2a2a;
+      color: var(--text);
+    }
+    td:not(:first-child) { text-align: center; font-size: 16px; }
+    tr:last-child td { border-bottom: none; }
+    .col-pro { color: var(--green); font-weight: 700; }
+
+    /* ---- PRICING ---- */
+    .pricing-section { padding: 64px 24px; max-width: 900px; margin: 0 auto; text-align: center; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 20px;
+      text-align: left;
+    }
+    .pricing-card.featured {
+      border-color: var(--green);
+    }
+    .pricing-card .plan-name {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .pricing-card .price {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .pricing-card .price sub {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+      vertical-align: baseline;
+    }
+    .pricing-card .price-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .pricing-card a {
+      display: block;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.15s;
+    }
+    .pricing-card.featured a {
+      background: var(--green);
+      color: #1e1e1e;
+    }
+    .pricing-card:not(.featured) a {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .pricing-card a:hover { opacity: 0.85; }
+    .money-back {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ---- INSTALL ---- */
+    .install-section {
+      padding: 80px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .install-section h2 { font-size: 28px; font-weight: 700; color: var(--white); margin-bottom: 14px; }
+    .install-section p { color: var(--muted); margin-bottom: 28px; }
+    .code-block {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 14px;
+      color: var(--green);
+      margin-bottom: 24px;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 32px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 20px; }
+
+    @media (max-width: 600px) {
+      nav { padding: 12px 20px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    MarkFlow <span>Pro</span>
+  </a>
+  <a class="install-btn" href="https://marketplace.visualstudio.com/items?itemName=gingerturtleapps.markflow-pro" target="_blank" rel="noopener">
+    Install Free
+  </a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="badge">Free + Pro · VS Code Extension</div>
+  <h1>Markdown preview that <span>actually works</span></h1>
+  <p>Auto-Open Markdown Preview has 639k installs and hasn't been updated since 2017. MarkFlow Pro fixes every broken behaviour — and then some.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://marketplace.visualstudio.com/items?itemName=gingerturtleapps.markflow-pro" target="_blank" rel="noopener">
+      Install from Marketplace
+    </a>
+    <a class="btn-secondary" href="#pricing">View Pro Pricing</a>
+  </div>
+  <p class="install-count">Free forever · No account needed · Pro unlocked with one licence key</p>
+</header>
+
+<!-- PROBLEMS FIXED -->
+<section class="section">
+  <div class="section-label">The problems we fix</div>
+  <h2>Every complaint about the old extension, solved.</h2>
+  <p>We read every open GitHub issue on the original extension. Here's what we built.</p>
+  <div class="pain-grid">
+    <div class="pain-card fixed">
+      <div class="icon">🔄</div>
+      <h3>Preview doesn't follow active file</h3>
+      <p>MarkFlow Pro listens to <code>onDidChangeActiveTextEditor</code> globally, across every split group. This is the bug everyone else misses.</p>
+    </div>
+    <div class="pain-card fixed">
+      <div class="icon">💀</div>
+      <h3>Preview dies if you close it</h3>
+      <p>Close the panel and open another .md file — the preview reappears. We track disposal and recreate the panel on next activation.</p>
+    </div>
+    <div class="pain-card fixed">
+      <div class="icon">⚔️</div>
+      <h3>Conflicts with Copilot and Prettier</h3>
+      <p>MarkFlow Pro registers zero conflicting keybindings. Tab, Ctrl+Enter, Ctrl+Shift+V — all yours.</p>
+    </div>
+    <div class="pain-card fixed">
+      <div class="icon">🐢</div>
+      <h3>Abandoned since 2017</h3>
+      <p>Actively maintained under the Ginger Turtle brand. Issues answered. Updates ship regularly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE TABLE -->
+<section class="features-section">
+  <div class="features-inner">
+    <div class="section-label" style="text-align:center">Features</div>
+    <h2 style="text-align:center; font-size:clamp(24px,3vw,36px); font-weight:700; color:var(--white);">Free vs Pro</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th class="col-pro">Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Auto-open preview on .md activation</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Preview follows active editor (all split groups)</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Preview re-opens after manual close</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Smart auto-close when leaving .md</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Layout modes (side-by-side, below, tab)</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Status bar indicator + quick settings</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Custom preview themes (GitHub Dark, Notion, Bear)</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Export to PDF</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Export to standalone HTML</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Outline sidebar with drag-and-drop reordering</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Word count + reading time in status bar</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Frontmatter / YAML metadata panel</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Focus / Zen writing mode</td>
+          <td>—</td>
+          <td>✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 style="font-size:clamp(24px,3vw,36px); font-weight:700; color:var(--white);">Simple, honest pricing</h2>
+  <p style="color:var(--muted); margin-top:10px;">Pay once or monthly. No subscriptions required. Cancel anytime.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">Free</div>
+      <div class="price">£0</div>
+      <div class="price-note">Forever free. No limits.</div>
+      <a href="https://marketplace.visualstudio.com/items?itemName=gingerturtleapps.markflow-pro" target="_blank" rel="noopener">
+        Install Free
+      </a>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">Monthly</div>
+      <div class="price">£2.99 <sub>/mo</sub></div>
+      <div class="price-note">Billed monthly. Cancel anytime.</div>
+      <a href="#" target="_blank" rel="noopener">Get Pro Monthly</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="plan-name">Annual</div>
+      <div class="price">£19.99 <sub>/yr</sub></div>
+      <div class="price-note">Save 44% vs monthly.</div>
+      <a href="#" target="_blank" rel="noopener">Get Pro Annual</a>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">Lifetime</div>
+      <div class="price">£39.99</div>
+      <div class="price-note">Pay once, use forever.</div>
+      <a href="#" target="_blank" rel="noopener">Get Lifetime</a>
+    </div>
+  </div>
+  <p class="money-back">30-day money-back guarantee · Licence key emailed instantly · Works offline after activation</p>
+</section>
+
+<!-- INSTALL -->
+<section class="install-section">
+  <h2>Get started in 10 seconds</h2>
+  <p>Search in VS Code's Extensions panel, or run:</p>
+  <div class="code-block">ext install gingerturtleapps.markflow-pro</div>
+  <br>
+  <a class="btn-primary" href="https://marketplace.visualstudio.com/items?itemName=gingerturtleapps.markflow-pro" target="_blank" rel="noopener">
+    Install from Marketplace
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Ginger Turtle Apps. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="https://github.com/gingerturtleapps/markflow-pro" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=gingerturtleapps.markflow-pro" target="_blank" rel="noopener">Marketplace</a>
+    <a href="mailto:support@gingerturtleapps.com">Support</a>
+  </div>
+</footer>
+
+</body>
+</html>

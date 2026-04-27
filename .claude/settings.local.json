@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vsce:*)",
+      "Bash(node -e \":*)",
+      "Bash(grep -v \"DeprecationWarning\\\\|Use \\\\`node\\\\|trace-deprecation\")",
+      "Bash(node -e \"const p=require\\(''./package.json''\\); console.log\\(''version:'', p.version, ''\\\\nname:'', p.name\\)\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\); const buf=fs.readFileSync\\(''assets/icon.png''\\); console.log\\(''size:'', buf.length, ''bytes''\\)\")"
+    ]
+  }
+}

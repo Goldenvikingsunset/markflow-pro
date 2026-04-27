@@ -1,0 +1,226 @@
+{
+  "name": "markflow-pro",
+  "displayName": "MarkFlow Pro",
+  "description": "Smart Markdown preview that follows your active file automatically. Free + Pro.",
+  "version": "1.0.0",
+  "publisher": "gingerturtleapps",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "icon": "assets/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other", "Visualization"],
+  "keywords": [
+    "markdown",
+    "preview",
+    "markdown preview",
+    "auto-open",
+    "auto open markdown preview",
+    "markdown viewer",
+    "live preview",
+    "markdown auto open",
+    "md preview",
+    "markdown pdf",
+    "markdown html",
+    "export markdown",
+    "markdown export",
+    "pdf export",
+    "html export",
+    "outline",
+    "document outline",
+    "word count",
+    "reading time",
+    "markdown themes",
+    "writing",
+    "notes",
+    "documentation",
+    "readme",
+    "split view"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gingerturtleapps/markflow-pro"
+  },
+  "activationEvents": ["onLanguage:markdown"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "markflowPro.openPreview",
+        "title": "Open Preview",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.closePreview",
+        "title": "Close Preview",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.activateLicence",
+        "title": "Activate Pro Licence",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.deactivateLicence",
+        "title": "Deactivate Pro Licence",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.openSettings",
+        "title": "Open Settings",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.quickSettings",
+        "title": "Quick Settings",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.exportHtml",
+        "title": "Export to HTML",
+        "category": "MarkFlow Pro"
+      },
+      {
+        "command": "markflowPro.exportPdf",
+        "title": "Export to PDF",
+        "category": "MarkFlow Pro"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "markflowPro.outline",
+          "name": "MarkFlow Outline"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "markflowPro.outline",
+        "contents": "Outline is a MarkFlow Pro feature.\n\n[Activate Licence](command:markflowPro.activateLicence)   [Learn More](https://gingerturtleapps.github.io/markflow-pro)",
+        "when": "!markflowPro.proActive"
+      },
+      {
+        "view": "markflowPro.outline",
+        "contents": "Open a Markdown file to see its outline.",
+        "when": "markflowPro.proActive"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "markflowPro.exportHtml",
+          "when": "resourceExtname == .md",
+          "group": "7_modification@10"
+        },
+        {
+          "command": "markflowPro.exportPdf",
+          "when": "resourceExtname == .md",
+          "group": "7_modification@11"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "markflowPro.exportHtml",
+          "when": "resourceLangId == markdown",
+          "group": "export@1"
+        },
+        {
+          "command": "markflowPro.exportPdf",
+          "when": "resourceLangId == markdown",
+          "group": "export@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "MarkFlow Pro",
+      "properties": {
+        "markflowPro.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic markdown preview."
+        },
+        "markflowPro.layout": {
+          "type": "string",
+          "enum": ["sideBySide", "below", "tab"],
+          "default": "sideBySide",
+          "description": "Preview panel layout mode."
+        },
+        "markflowPro.autoClose": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically close preview when you navigate away from a markdown file."
+        },
+        "markflowPro.pro.theme": {
+          "type": "string",
+          "enum": ["default", "github", "githubDark", "notion", "bear"],
+          "enumDescriptions": [
+            "VS Code default (follows your editor theme)",
+            "GitHub light — matches GitHub.com markdown rendering",
+            "GitHub dark — dark variant of GitHub rendering",
+            "Notion — serif font, generous spacing",
+            "Bear — clean, warm, minimal"
+          ],
+          "default": "default",
+          "description": "Preview theme (MarkFlow Pro only)."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "gettingStarted",
+        "title": "Get Started with MarkFlow Pro",
+        "description": "Smart Markdown preview in 3 steps.",
+        "steps": [
+          {
+            "id": "autoOpen",
+            "title": "Preview opens automatically",
+            "description": "Open any .md file and MarkFlow Pro shows a live preview in the side panel — no commands needed.\n\n[Open a Markdown file](command:workbench.action.files.openFile)",
+            "media": {
+              "image": "assets/walkthrough/step1.svg",
+              "altText": "Markdown preview opening automatically alongside the editor"
+            }
+          },
+          {
+            "id": "trackFiles",
+            "title": "Preview tracks your active file",
+            "description": "Switch between .md files — the preview updates instantly, even across split editor groups.\n\n[Open Preview](command:markflowPro.openPreview)",
+            "media": {
+              "image": "assets/walkthrough/step2.svg",
+              "altText": "Preview panel following the active markdown file"
+            }
+          },
+          {
+            "id": "upgradePro",
+            "title": "Go further with Pro",
+            "description": "Unlock custom themes, PDF & HTML export, an outline sidebar, and more.\n\n[Activate Licence](command:markflowPro.activateLicence)\n[Learn More](https://gingerturtleapps.github.io/markflow-pro)",
+            "media": {
+              "image": "assets/walkthrough/step3.svg",
+              "altText": "Pro features: themes, export, outline sidebar"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "marked": "^12.0.0"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "node esbuild.js",
+    "vsix": "npx vsce package",
+    "test": "node ./out/test/runTest.js",
+    "pretest": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.8",
+    "esbuild": "^0.20.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3"
+  }
+}
