@@ -1,4 +1,7 @@
 {
+  "env": {
+    "NODE_ENV": "development"
+  },
   "permissions": {
     "allow": [
       "Bash(npm run compile)",
@@ -9,7 +12,8 @@
       "Bash(npm install)",
       "Bash(node esbuild.js)",
       "Bash(npx esbuild*)",
-      "Bash(npx vsce package)"
+      "Bash(npx vsce package)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('version:', p.version\\)\")"
     ],
     "deny": [
       "Bash(vsce publish)",
@@ -17,8 +21,5 @@
       "Bash(rm -rf*)",
       "Bash(rmdir /s*)"
     ]
-  },
-  "env": {
-    "NODE_ENV": "development"
   }
 }

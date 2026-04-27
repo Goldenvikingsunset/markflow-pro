@@ -3,7 +3,7 @@
   "displayName": "MarkFlow Pro",
   "description": "Smart Markdown preview that follows your active file automatically. Free + Pro.",
   "version": "1.0.0",
-  "publisher": "gingerturtleapps",
+  "publisher": "GingerTurtle",
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "assets/icon.png",
   "engines": {
@@ -39,7 +39,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gingerturtleapps/markflow-pro"
+    "url": "https://github.com/Goldenvikingsunset/markflow-pro"
   },
   "activationEvents": ["onLanguage:markdown"],
   "main": "./dist/extension.js",
