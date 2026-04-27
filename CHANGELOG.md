@@ -2,6 +2,11 @@
 
 All notable changes to MarkFlow Pro will be documented here.
 
+## [1.0.1] — 2026-04-27
+
+### Fixed
+- README demo now uses animated GIF (plays inline on Marketplace)
+
 ## [1.0.0] — 2026-04-27
 
 ### Added

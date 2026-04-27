@@ -8,7 +8,7 @@
 
 ## See it in action
 
-<video src="assets/markflow.mp4" autoplay loop muted width="100%"></video>
+![MarkFlow Pro Demo](assets/markflow.gif)
 
 ---
 
