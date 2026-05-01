@@ -2,7 +2,7 @@
   "name": "markflow-pro",
   "displayName": "MarkFlow Pro",
   "description": "Smart Markdown preview that follows your active file automatically. Free + Pro.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "GingerTurtle",
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "assets/icon.png",

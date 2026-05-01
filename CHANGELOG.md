@@ -2,6 +2,11 @@
 
 All notable changes to MarkFlow Pro will be documented here.
 
+## [1.0.2] — 2026-05-01
+
+### Fixed
+- `autoClose` now closes the preview instantly when the markdown tab is closed, without requiring a click on another file
+
 ## [1.0.1] — 2026-04-27
 
 ### Fixed

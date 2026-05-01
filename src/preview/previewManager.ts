@@ -17,6 +17,10 @@ export class PreviewManager implements vscode.Disposable {
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(editor => this.onEditorChange(editor))
     );
+    // Close preview instantly when the markdown tab is closed (not just switched away from).
+    this.disposables.push(
+      vscode.workspace.onDidCloseTextDocument(doc => this.onDocumentClose(doc))
+    );
   }
 
   private onEditorChange(editor: vscode.TextEditor | undefined): void {
@@ -30,6 +34,19 @@ export class PreviewManager implements vscode.Disposable {
         logger.log(`Error showing preview: ${err}`);
       }
     } else if (getAutoClose()) {
+      this.panel?.dispose();
+    }
+  }
+
+  private onDocumentClose(doc: vscode.TextDocument): void {
+    if (!isEnabled() || !getAutoClose()) { return; }
+    if (doc.languageId !== 'markdown') { return; }
+
+    // Only close the preview if no other markdown editors remain open.
+    const anyMdOpen = vscode.window.visibleTextEditors.some(
+      e => e.document.languageId === 'markdown' && e.document !== doc
+    );
+    if (!anyMdOpen) {
       this.panel?.dispose();
     }
   }
