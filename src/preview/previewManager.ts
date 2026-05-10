@@ -17,6 +17,16 @@ export class PreviewManager implements vscode.Disposable {
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(editor => this.onEditorChange(editor))
     );
+    // Live preview: update whenever the markdown document content changes.
+    this.disposables.push(
+      vscode.workspace.onDidChangeTextDocument(event => {
+        if (event.document.languageId !== 'markdown') { return; }
+        const activeEditor = vscode.window.activeTextEditor;
+        if (activeEditor?.document === event.document) {
+          this.update(event.document);
+        }
+      })
+    );
     // Close preview instantly when the markdown tab is closed (not just switched away from).
     this.disposables.push(
       vscode.workspace.onDidCloseTextDocument(doc => this.onDocumentClose(doc))
@@ -61,7 +71,7 @@ export class PreviewManager implements vscode.Disposable {
       this.panel = vscode.window.createWebviewPanel(
         'markflowPreview',
         Strings.previewTitle,
-        LayoutManager.getColumn(),
+        { viewColumn: LayoutManager.getColumn(), preserveFocus: true },
         {
           enableScripts: false,
           retainContextWhenHidden: true,

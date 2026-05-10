@@ -2,6 +2,12 @@
 
 All notable changes to MarkFlow Pro will be documented here.
 
+## [1.0.3] — 2026-05-10
+
+### Fixed
+- Preview panel no longer steals focus from the markdown editor when it opens — files clicked in the Explorer now open on the left as expected
+- Preview updates instantly as you type (live preview); previously required switching tabs to refresh
+
 ## [1.0.2] — 2026-05-01
 
 ### Fixed
