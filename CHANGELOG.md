@@ -2,6 +2,13 @@
 
 All notable changes to MarkFlow Pro will be documented here.
 
+## [1.0.4] — 2026-05-12
+
+### Changed
+- Marketplace description updated to lead with "auto-open markdown preview" for better discoverability
+- README expanded with competitor comparison table, "Perfect For" use-case section, and FAQ — improving long-tail search visibility
+- Added keywords: `auto preview`, `markdown editor`, `follow active editor`, `technical writing`, `github flavored markdown`, `obsidian`, `frontmatter`
+
 ## [1.0.3] — 2026-05-10
 
 ### Fixed

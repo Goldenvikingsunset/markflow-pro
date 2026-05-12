@@ -1,8 +1,8 @@
 {
   "name": "markflow-pro",
   "displayName": "MarkFlow Pro",
-  "description": "Smart Markdown preview that follows your active file automatically. Free + Pro.",
-  "version": "1.0.3",
+  "description": "Auto-open Markdown preview that follows your active file across all editor groups. Export to PDF & HTML. Free + Pro.",
+  "version": "1.0.4",
   "publisher": "GingerTurtle",
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "assets/icon.png",
@@ -16,9 +16,12 @@
     "markdown preview",
     "auto-open",
     "auto open markdown preview",
+    "auto preview",
+    "markdown editor",
     "markdown viewer",
     "live preview",
     "markdown auto open",
+    "follow active editor",
     "md preview",
     "markdown pdf",
     "markdown html",
@@ -35,7 +38,13 @@
     "notes",
     "documentation",
     "readme",
-    "split view"
+    "split view",
+    "technical writing",
+    "github flavored markdown",
+    "obsidian",
+    "frontmatter",
+    "markdown split view",
+    "preview panel"
   ],
   "repository": {
     "type": "git",
